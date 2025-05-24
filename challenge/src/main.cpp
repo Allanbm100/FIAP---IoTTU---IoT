@@ -5,7 +5,7 @@
 const char* ssid = "Wokwi-GUEST";
 const char* password = "";
 
-const char* mqtt_server = "192.168.0.169";
+const char* mqtt_server = "SEU_IP";
 const int mqtt_port = 1883;
 const char* mqtt_topic = "mottu/motos";
 
