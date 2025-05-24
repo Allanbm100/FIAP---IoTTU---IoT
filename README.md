@@ -1,79 +1,85 @@
-# Projeto IoT com ESP32 e MQTT Simulado no Wokwi
+# 🛵 Projeto IoTTU - Mapeamento Inteligente do Pátio
 
-## Descrição
+## 📋 Descrição do Projeto
 
-Este projeto demonstra como configurar um ESP32 para conectar-se a uma rede Wi-Fi e enviar e receber dados via MQTT. A simulação é realizada no [Wokwi](https://wokwi.com/), um simulador online de hardware. O desenvolvimento é feito utilizando o Visual Studio Code com a extensão PlatformIO.
+Este projeto foi desenvolvido como parte do Challenge 2025, promovido pela Mottu em parceria com a FIAP. A proposta é criar uma solução para mapeamento inteligente de motocicletas nos pátios das filiais da Mottu, permitindo o monitoramento em tempo real da localização e status das motos.
 
-## Adaptação
+A solução combina tecnologias de IoT (com ESP32), MQTT, visão computacional e um dashboard interativo via Node-RED para visualizar os dados capturados.
 
-Esse repositório é uma adaptação deste tutorial.[https://docs.google.com/document/d/1y6IfbOT_rAimZx41tNBL9NlscoB1ObjgaPmy2g4UGO0/edit?usp=sharing](https://docs.google.com/document/d/1y6IfbOT_rAimZx41tNBL9NlscoB1ObjgaPmy2g4UGO0/edit?usp=sharing) 
+---
 
+## 🔧 Tecnologias Utilizadas
 
-## Funcionalidades
+- C++ (Arduino/ESP32)
+- MQTT (PubSubClient e Mosquitto)
+- Node-RED
+- Wi-Fi RSSI para estimativa de distância
+- Broker MQTT local
+- Dashboard web em tempo real
 
-- **Conexão Wi-Fi**: O ESP32 conecta-se automaticamente à rede Wi-Fi especificada.
-- **Comunicação MQTT**: Envia e recebe mensagens através de um broker MQTT.
-- **Simulação no Wokwi**: Permite testar o projeto sem a necessidade de hardware físico.
+---
 
-## Pré-requisitos
+## 📡 Arquitetura da Solução
 
-- [Visual Studio Code](https://code.visualstudio.com/)
-- [PlatformIO IDE](https://platformio.org/install/ide?install=vscode)
-- Conta no [Wokwi](https://wokwi.com/)
-- Broker MQTT (como o [Mosquitto](https://mosquitto.org/) ou serviços online como o [HiveMQ](https://www.hivemq.com/))
+1. **ESP32** simula sensores embarcados nas motos, publicando dados MQTT com ID da moto, status (Disponível, Em manutenção, Indisponível), distância estimada e zona (A, B, C, D).
+2. **Broker MQTT** recebe os dados.
+3. **Node-RED** consome os dados MQTT, armazena em variáveis de fluxo e exibe num painel interativo.
 
-## Instalação
+---
 
-1. **Clone o repositório:**
+## 🚀 Instalação e Execução
 
+### ESP32 (Firmware Arduino)
+
+1. Abra o `main.cpp` na IDE Arduino.
+2. Configure o Wi-Fi (SSID e senha) e o IP do broker MQTT.
+3. Carregue o código no ESP32.
+4. O dispositivo começará a publicar os dados em loop.
+
+### Node-RED
+
+1. Instale o Node-RED:  
    ```bash
-   git clone https://github.com/arnaldojr/iot-esp32-wokwi-vscode.git
+   npm install -g --unsafe-perm node-red
    ```
+2. Inicie o Node-RED:
+   ```bash
+   node-red
+   ```
+3. Importe o fluxo do arquivo `flows.json` na interface do Node-RED (http://<SEU_IP>:1880).
+4. Configure o broker MQTT no Node-RED com o mesmo IP usado no ESP32.
+5. Acesse o dashboard: http://<SEU_IP>:1880/ui
 
-2. Abra o projeto no VSCode:
+---
 
-    Abra o Visual Studio Code e navegue até a pasta do projeto clonado.
+## 📡 MQTT - Tópicos e Payloads
 
-3. Instale as dependências:
-
-    O PlatformIO irá instalar automaticamente as bibliotecas necessárias durante a primeira compilação.
-
-## Configuração
-
-Credenciais Wi-Fi e MQTT:
-
-No arquivo src/main.cpp, insira suas credenciais de Wi-Fi e as informações do broker MQTT:
-
-```cpp
-
-// Configurações de WiFi
-const char *SSID = "Wokwi-GUEST"; // não precisa alterar no simulador
-const char *PASSWORD = "";        // 
-
-// Configurações de MQTT
-const char *BROKER_MQTT = "broker.hivemq.com"; // seu broker mqtt
-const int BROKER_PORT = 1883;
-const char *ID_MQTT = "esp32_mqtt";
-const char *TOPIC_SUBSCRIBE_LED = "fiap/iot/led";  // seu topico SUB
-const char *TOPIC_PUBLISH_TEMP_HUMI = "fiap/iot/temphumi"; // seu tópico PUB
+- **Tópico**: `mottu/motos`
+- **Payload exemplo**:
+```json
+{
+  "id": "moto-001",
+  "status": "Disponível",
+  "zona": "B",
+  "distancia": 58.25
+}
 ```
 
-## Uso
+---
 
-1. Compilar o projeto:
+## 📍 Funcionalidades
 
-No PlatformIO, clique em Build para compilar o código.
+- Identificação única de motos.
+- Cálculo de zona baseado em distância (simulação de proximidade).
+- Publicação periódica de dados via MQTT.
+- Visualização em painel web com botão para limpar os dados.
+- Preparado para escalabilidade (até 100+ motos simuladas).
 
-2. Iniciar a simulação:
+---
 
-- No Wokwi, inicie a simulação.
-- Observe a saída serial para verificar a conexão Wi-Fi e a comunicação MQTT.
+## 👥 Equipe
 
-3. Testar a comunicação MQTT:
-
-- Use um cliente MQTT (como o node-red) para publicar e subscrever tópicos para interagir com o ESP32.
-
-4. Simulação Dicas:
-
-- O Wokwi permite simular o comportamento do ESP32 em tempo real, mas preste atenção no tempo de execução que pode variar e ficar lento:
-- Utilize o monitor serial para acompanhar os logs da aplicação.
+| Nome Completo         | RM       |
+| [Allan Brito Moreira] | [558948] |
+| [Levi Magni]          | [98276]  |
+| [Caio Liang]          | [558868] |

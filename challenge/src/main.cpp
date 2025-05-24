@@ -40,37 +40,41 @@ void conectarMQTT() {
   }
 }
 
+String calcularZona(float distancia) {
+  if (distancia < 30.0) return "A";
+  else if (distancia < 60.0) return "B";
+  else if (distancia < 120.0) return "C";
+  else return "D";
+}
+
+const char* statusOpcoes[] = {"Disponível", "Em manutenção", "Indisponível"};
+
 void setup() {
   Serial.begin(115200);
+  randomSeed(analogRead(0));
   conectarWiFi();
   client.setServer(mqtt_server, mqtt_port);
 }
-
-struct Moto {
-  String id;
-  String status;
-  String zona;
-};
-
-Moto motos[] = {
-  {"moto-001", "Manutenção", "A1"},
-  {"moto-002", "", "B2"},
-  {"moto-003", "ligada", "C1"},
-};
 
 void loop() {
   if (!client.connected()) conectarMQTT();
   client.loop();
 
-  for (int i = 0; i < 3; i++) {
+  for (int i = 1; i <= 10; i++) {
     int rssi = WiFi.RSSI();
     float distancia = calcularDistancia(rssi);
+    String zona = calcularZona(distancia);
+
+    char idMoto[10];
+    snprintf(idMoto, sizeof(idMoto), "moto-%03d", i);
+
+    int idxStatus = random(0, 3);
+    const char* status = statusOpcoes[idxStatus];
 
     String payload = "{";
-    payload += "\"id\":\"" + motos[i].id + "\",";
-    payload += "\"status\":\"" + motos[i].status + "\",";
-    payload += "\"zona\":\"" + motos[i].zona + "\",";
-    payload += "\"rssi\":" + String(rssi) + ",";
+    payload += "\"id\":\"" + String(idMoto) + "\",";
+    payload += "\"status\":\"" + String(status) + "\",";
+    payload += "\"zona\":\"" + zona + "\",";
     payload += "\"distancia\":" + String(distancia, 2);
     payload += "}";
 
@@ -80,6 +84,5 @@ void loop() {
     delay(2000);
   }
 
-  delay(25000);
+  delay(50000);
 }
-
