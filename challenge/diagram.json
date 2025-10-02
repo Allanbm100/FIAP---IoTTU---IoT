@@ -6,14 +6,34 @@
     {
       "type": "wokwi-esp32-devkit-v1",
       "id": "esp",
-      "top": -50,
-      "left": 100,
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": -90,
+      "left": 300,
+      "attrs": {
+        "color": "blue"
+      }
+    },
+    {
+      "type": "wokwi-piezo-buzzer",
+      "id": "buzzer1",
+      "top": 80,
+      "left": 250,
       "attrs": {}
     }
   ],
   "connections": [
     [ "esp:TX0", "$serialMonitor:RX", "", [] ],
-    [ "esp:RX0", "$serialMonitor:TX", "", [] ]
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "esp:D2", "led1:A", "green", [] ],
+    [ "esp:GND.1", "led1:K", "black", [] ],
+    [ "esp:D4", "buzzer1:1", "green", [] ],
+    [ "esp:GND.2", "buzzer1:2", "black", [] ]
   ],
   "dependencies": {}
 }
