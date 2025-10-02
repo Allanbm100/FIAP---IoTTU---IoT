@@ -1,5 +1,8 @@
 # 🛵 Projeto IoTTU - Mapeamento Inteligente do Pátio (Challenge FIAP/Mottu)
 
+## Link Do vídeo
+https://youtu.be/w2GqpwASFHs
+
 ## 📋 Descrição do Projeto
 
 Este projeto demonstra uma solução robusta de monitoramento de ativos (**motocicletas**) em um pátio, desenvolvida como parte do **Challenge 2025 da Mottu em parceria com a FIAP**.  
