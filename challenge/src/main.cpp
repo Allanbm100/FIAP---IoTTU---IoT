@@ -7,9 +7,10 @@
 const char* SSID = "Wokwi-GUEST";
 const char* SENHA = "";
 
-const char* MQTT_BROKER = "SEU_IP"; 
+const char* MQTT_BROKER = "192.168.0.151"; 
 const int MQTT_PORTA = 1883;
 const char* MQTT_TOPICO = "fiap/iot/moto";
+
 
 const int LED_PIN = 2;
 const int BUZZER_PIN = 4;
@@ -51,9 +52,9 @@ WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 
 Totem totens[3] = {
-  {1, 1, "ANTENA001", {-23.573300, -46.640000}, {0.00, 0.00}}, 
-  {2, 1, "ANTENA002", {-23.573300, -46.639500}, {0.00, 0.00}}, 
-  {3, 1, "ANTENA003", {-23.572800, -46.640000}, {0.00, 0.00}}
+  {10001, 1, "ANTENA001", {-23.573300, -46.640000}, {0.00, 0.00}}, 
+  {10002, 1, "ANTENA002", {-23.573300, -46.639500}, {0.00, 0.00}}, 
+  {10003, 1, "ANTENA003", {-23.572800, -46.640000}, {0.00, 0.00}}
 };
 
 Moto motos[NUM_MOTOS] = {
