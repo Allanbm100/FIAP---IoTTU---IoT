@@ -79,7 +79,23 @@ FIAP---IoTTU---IoT/
 - **Node-RED** (`npm install -g --unsafe-perm node-red`)
 - **Mosquitto MQTT Broker**
 - **PostgreSQL** (ver repositório Java para setup)
+- **Node.js** (para executar scripts de integração com Azure PostgreSQL)
+- **Módulo pg** (cliente PostgreSQL para Node.js) - instalado via `npm install pg` na pasta `node-red/`
 - **(Opcional)** Conta Wokwi para simulação online
+
+### ⚙️ Configuração Importante - Caminho do Script PostgreSQL
+
+**ATENÇÃO**: Antes de importar o flow no Node-RED, você precisa configurar o caminho do script `pg-executor.bat`:
+
+1. No arquivo `node-red/flow-iottu.json`, localize o nó `postgres_exec`
+2. Encontre a linha com `"command":`
+3. **Substitua** o valor **[CAMINHO COMPLETO DO PG-EXECUTOR.BAT]** pelo que é pedido
+4. Use o caminho completo do arquivo no seu sistema
+
+**Exemplo:**
+- **Windows**: `C:\\Users\\SeuNome\\Desktop\\Fiap\\IoT\\FIAP---IoTTU---IoT\\node-red\\pg-executor.bat`
+- **Mac/Linux**: `/home/seunome/Desktop/Fiap/IoT/FIAP---IoTTU---IoT/node-red/pg-executor.bat`
+
 
 ### Passo a Passo
 
@@ -130,13 +146,28 @@ pio run
 #### 5. Configure Node-RED
 
 ```bash
-# Inicie o Node-RED
+# 1. Instale as dependências do PostgreSQL
+cd node-red
+npm install pg
+
+# 2. Inicie o Node-RED
 node-red
 
-# Acesse http://localhost:1880
-# Importe o flow: Menu → Import → node-red/flow-iottu.json
-# Clique em Deploy
+# 3. Acesse http://localhost:1880
 ```
+
+**4. Configure o caminho do script:**
+- Abra o arquivo `node-red/flow-iottu.json` em um editor de texto
+- Procure por `[COLOQUE O CAMINHO COMPLETO DO PG-EXECUTOR.BAT]`
+- Substitua pelo caminho completo do arquivo `pg-executor.bat` no seu sistema
+- Exemplo: `C:\\Users\\Allan\\Desktop\\Fiap\\IoT\\FIAP---IoTTU---IoT\\node-red\\pg-executor.bat`
+
+**5. Importe o flow:**
+- No Node-RED: Menu → Import → Selecione `node-red/flow-iottu.json`
+- Clique em **Deploy**
+
+**6. Verifique a conexão:**
+- Você deve ver mensagens "✅ Salvo" no debug quando o ESP32 publicar dados
 
 #### 6. Verifique os Dados
 

@@ -66,7 +66,7 @@
         "type": "function",
         "z": "main_flow",
         "name": "SQL Motos + Tags (Loop)",
-        "func": "const motos = msg.payload.motos;\nconst msgs = [];\n\n// Criar mensagens para cada moto\nfor (let moto of motos) {\n    // 1. UPSERT da MOTO\n    const queryMoto = `INSERT INTO tb_moto (placa_moto, chassi_moto, nr_motor_moto, modelo_moto, id_status, id_patio) VALUES ('${moto.placa_moto}', '${moto.chassi_moto}', '${moto.nr_motor_moto}', '${moto.modelo_moto}', ${moto.id_status}, ${moto.id_patio}) ON CONFLICT (chassi_moto) DO UPDATE SET placa_moto = EXCLUDED.placa_moto, modelo_moto = EXCLUDED.modelo_moto, id_status = EXCLUDED.id_status, id_patio = EXCLUDED.id_patio;`;\n    \n    msgs.push({\n        topic: `\"${queryMoto}\"`,\n        payload: \"\"\n    });\n    \n    // 2. UPSERT da TAG (se tiver coordenadas)\n    if (moto.latitude && moto.longitude) {\n        const queryTag = `INSERT INTO tb_tag (codigo_rfid_tag, ssid_wifi_tag, latitude_tag, longitude_tag, data_hora_tag) VALUES ('${moto.codigo_rfid_tag}', '${moto.ssid_wifi_tag}', ${moto.latitude}, ${moto.longitude}, NOW()) ON CONFLICT (codigo_rfid_tag) DO UPDATE SET ssid_wifi_tag = EXCLUDED.ssid_wifi_tag, latitude_tag = EXCLUDED.latitude_tag, longitude_tag = EXCLUDED.longitude_tag, data_hora_tag = NOW();`;\n        \n        msgs.push({\n            topic: `\"${queryTag}\"`,\n            payload: \"\"\n        });\n    }\n}\n\nnode.status({fill:\"green\", shape:\"dot\", text:`${motos.length} motos processadas`});\nreturn [msgs];",
+        "func": "const motos = msg.payload.motos;\nconst msgs = [];\n\n// Criar mensagens para cada moto\nfor (let moto of motos) {\n    // 1. UPSERT da MOTO\n    const queryMoto = `INSERT INTO tb_moto (placa_moto, chassi_moto, nr_motor_moto, modelo_moto, id_status, id_patio) VALUES ('${moto.placa_moto}', '${moto.chassi_moto}', '${moto.nr_motor_moto}', '${moto.modelo_moto}', ${moto.id_status}, ${moto.id_patio}) ON CONFLICT (chassi_moto) DO UPDATE SET placa_moto = EXCLUDED.placa_moto, modelo_moto = EXCLUDED.modelo_moto, id_status = EXCLUDED.id_status, id_patio = EXCLUDED.id_patio;`;\n    \n    msgs.push({\n        payload: queryMoto\n    });\n    \n    // 2. UPSERT da TAG (se tiver coordenadas)\n    if (moto.latitude && moto.longitude) {\n        const queryTag = `INSERT INTO tb_tag (codigo_rfid_tag, ssid_wifi_tag, latitude_tag, longitude_tag, data_hora_tag) VALUES ('${moto.codigo_rfid_tag}', '${moto.ssid_wifi_tag}', ${moto.latitude}, ${moto.longitude}, NOW()) ON CONFLICT (codigo_rfid_tag) DO UPDATE SET ssid_wifi_tag = EXCLUDED.ssid_wifi_tag, latitude_tag = EXCLUDED.latitude_tag, longitude_tag = EXCLUDED.longitude_tag, data_hora_tag = NOW();`;\n        \n        msgs.push({\n            payload: queryTag\n        });\n    }\n}\n\nnode.status({fill:\"green\", shape:\"dot\", text:`${motos.length} motos processadas`});\nreturn [msgs];",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -81,7 +81,7 @@
         "type": "function",
         "z": "main_flow",
         "name": "SQL Antenas (Loop)",
-        "func": "const antenas = msg.payload.antenas;\nconst msgs = [];\n\n// Criar uma mensagem para cada antena\nfor (let antena of antenas) {\n    const query = `INSERT INTO tb_antena (id_antena, codigo_antena, id_patio, latitude_antena, longitude_antena) VALUES (${antena.id_antena}, '${antena.codigo_antena}', ${antena.id_patio}, ${antena.latitude_antena}, ${antena.longitude_antena}) ON CONFLICT (id_antena) DO UPDATE SET codigo_antena = EXCLUDED.codigo_antena, id_patio = EXCLUDED.id_patio, latitude_antena = EXCLUDED.latitude_antena, longitude_antena = EXCLUDED.longitude_antena;`;\n    \n    msgs.push({\n        topic: `\"${query}\"`,\n        payload: \"\"\n    });\n}\n\nnode.status({fill:\"blue\", shape:\"dot\", text:`${antenas.length} antenas`});\nreturn [msgs];",
+        "func": "const antenas = msg.payload.antenas;\nconst msgs = [];\n\n// Criar uma mensagem para cada antena\nfor (let antena of antenas) {\n    const query = `INSERT INTO tb_antena (id_antena, codigo_antena, id_patio, latitude_antena, longitude_antena) VALUES (${antena.id_antena}, '${antena.codigo_antena}', ${antena.id_patio}, ${antena.latitude_antena}, ${antena.longitude_antena}) ON CONFLICT (id_antena) DO UPDATE SET codigo_antena = EXCLUDED.codigo_antena, id_patio = EXCLUDED.id_patio, latitude_antena = EXCLUDED.latitude_antena, longitude_antena = EXCLUDED.longitude_antena;`;\n    \n    msgs.push({\n        payload: query\n    });\n}\n\nnode.status({fill:\"blue\", shape:\"dot\", text:`${antenas.length} antenas`});\nreturn [msgs];",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -171,17 +171,17 @@
         "id": "postgres_exec",
         "type": "exec",
         "z": "main_flow",
-        "command": "cmd /c docker exec -i postgres_iottu psql -U iottu -d iottu -q -t -c",
-        "addpay": "topic",
+        "command": "[CAMINHO COMPLETO DO PG-EXECUTOR.BAT]",
+        "addpay": "payload",
         "append": "",
         "useSpawn": "false",
         "timer": "",
         "winHide": false,
         "oldrc": false,
-        "name": "PostgreSQL via Docker",
-        "x": 1280,
+        "name": "PostgreSQL Azure",
+        "x": 1080,
         "y": 200,
-        "wires": [["debug_success"], ["debug_error_exec"], []]
+        "wires": [["debug_success"], ["debug_error_exec"], ["debug_error_exec"]]
     },
     {
         "id": "debug_success",
@@ -271,20 +271,5 @@
         "willMsg": {},
         "userProps": "",
         "sessionExpiry": ""
-    },
-    {
-        "id": "postgres_local",
-        "type": "postgresdb",
-        "name": "IoTTU Local",
-        "hostname": "localhost",
-        "port": "5432",
-        "db": "iottu",
-        "ssl": false,
-        "max": "10",
-        "min": "1",
-        "idle": "1000",
-        "connectionTimeout": "10000",
-        "user": "iottu",
-        "password": "iottu"
     }
 ]
