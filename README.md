@@ -1,25 +1,18 @@
-# IoTTU - Sistema IoT de Rastreamento de Motocicletas
+# 🛵 Projeto IoTTU - Mapeamento Inteligente do Pátio (Challenge FIAP/Mottu)
+
+## Link Do vídeo
+https://youtu.be/w2GqpwASFHs
 
 ## 📋 Descrição do Projeto
 
-Sistema de rastreamento em tempo real de motocicletas em pátios utilizando tecnologias IoT. Desenvolvido para a FIAP Challenge 2025 em parceria com a Mottu. O projeto simula tags RFID/Wi-Fi embarcadas em motocicletas, calculando posições por trilateração via RSSI e enviando dados por MQTT.
+Este projeto demonstra uma solução robusta de monitoramento de ativos (**motocicletas**) em um pátio, desenvolvida como parte do **Challenge 2025 da Mottu em parceria com a FIAP**.  
+A solução permite o rastreamento em tempo real da localização, calculada via **trilateração**, e o status de cada moto.
 
-## 👥 Autores
+A arquitetura combina um **Simulador IoT (ESP32 em C++)** para calcular a localização e publicar os dados, e um **Backend Java Spring Boot** que atua como consumidor das mensagens **MQTT**, processa os dados e persiste em um banco de dados **PostgreSQL (via Docker)**.
 
-- **Allan Brito Moreira** - RM558948
-- **Caio Liang** - RM558868
-- **Levi Magni** - RM98276
+---
 
-## 🚀 Funcionalidades
-
-- ✅ **Simulação de 8 motocicletas** com tags RFID/Wi-Fi
-- ✅ **3 antenas fixas** para trilateração
-- ✅ **Cálculo de posição em tempo real** (latitude/longitude via RSSI)
-- ✅ **Publicação MQTT** a cada 3 segundos
-- ✅ **Integração via Node-RED** para persistência no banco
-- ✅ **Suporte para múltiplos status**: Disponível, Indisponível, Em Manutenção
-
-## �️ Tecnologias Utilizadas
+## 🔧 Tecnologias Utilizadas
 
 ### Hardware/Firmware
 - **ESP32** - Microcontrolador
